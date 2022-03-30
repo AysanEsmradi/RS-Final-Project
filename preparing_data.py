@@ -11,8 +11,10 @@ def prepare_data():
     df = pd.read_csv('Book reviews/Preprocessed_data.csv')
     # edit your data path here
 
-    df = df.query('Language=="en"')  # we only recommend english books
+    df = df.query('Language=="en"')
     df = df[['user_id', 'isbn', 'rating', 'book_title', 'Summary', 'Category', 'img_m']]
+    print(df.isna().sum())  # check null values
+
     item_df = df[['isbn', 'book_title', 'Summary', 'Category', 'img_m']].copy()
     item_df.drop_duplicates(subset=['isbn'], inplace=True)
     item_df = item_df.reset_index(drop=True)
