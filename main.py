@@ -16,6 +16,9 @@ import json
 from surprise import KNNBasic
 from surprise import Dataset
 
+from preparing_data import prepare_data
+from nlp_summary.algorithm import get_predicted_result
+
 app = FastAPI()
 app.add_middleware(
     CORSMiddleware,
@@ -26,17 +29,18 @@ app.add_middleware(
 )
 
 # =======================DATA=========================
-data = pd.read_csv("movie_info.csv")
+data, item_df = prepare_data()
+print(data.columns)
 
 """
 =================== Body =============================
 """
 
 
-class Movie(BaseModel):
-    movie_id: int
-    movie_title: str
-    release_date: str
+class Book(BaseModel):
+    isbn: int
+    book_title: str
+    img_l: str
     score: int
 
 
@@ -60,29 +64,35 @@ def get_genre():
 
 @app.post("/api/movies")
 def get_movies(genre: list):
+    # todo: select algorithm
+    '''
+    # use of genre
+
     print(genre)
     query_str = " or ".join(map(map_genre, genre))
     results = data.query(query_str)
+    '''
+
+    results = data
     results.loc[:, 'score'] = None
-    results = results.sample(18).loc[:, ['movie_id', 'movie_title', 'release_date', 'poster_url', 'score']]
-    print(results)
+    results = results.sample(18).loc[:, ['isbn', 'book_title', 'img_l', 'score']]
     return json.loads(results.to_json(orient="records"))
 
 
 @app.post("/api/recommend")
-def get_recommend(movies: List[Movie]):
-    # print(movies)
-    iid = str(sorted(movies, key=lambda i: i.score, reverse=True)[0].movie_id)
-    score = int(sorted(movies, key=lambda i: i.score, reverse=True)[0].score)
+def get_recommend(books: list):
+    print(books)
+    iid = str(sorted(books, key=lambda i: i.score, reverse=True)[0].isbn)
+    score = int(sorted(books, key=lambda i: i.score, reverse=True)[0].score)
     res = get_initial_items(iid, score)
     res = [int(i) for i in res]
     if len(res) > 12:
         res = res[:12]
     print(res)
-    rec_movies = data.loc[data['movie_id'].isin(res)]
+    rec_movies = data.loc[data['isbn'].isin(res)]
     print(rec_movies)
     rec_movies.loc[:, 'like'] = None
-    results = rec_movies.loc[:, ['movie_id', 'movie_title', 'release_date', 'poster_url', 'like']]
+    results = rec_movies.loc[:, ['isbn', 'book_title', 'img_l', 'like']]
     return json.loads(results.to_json(orient="records"))
 
 
@@ -143,3 +153,38 @@ def get_similar_items(iid, n=12):
     neighbors_iid = [algo.trainset.to_raw_iid(x) for x in neighbors]
     print(neighbors_iid)
     return neighbors_iid
+
+
+# == == == == == == == == == API for Jeffy == == == == == == == == == == =
+
+@app.post("/api/recommend_nlp")
+def get_recommend_by_nlp(books: list):
+    explicit_user_df = pd.DataFrame(books)
+    explicit_user_df.loc[:, 'user_id'] = 123123123    # todo: add user
+    explicit_user_df.loc[:, 'rating'] = explicit_user_df.loc[:, 'score']
+    k_results = get_predicted_result(explicit_user_df, item_df)
+
+    print("========================== return nlp result ============================")
+    rec_books = item_df.loc[item_df['isbn'].isin(k_results)]
+    rec_books.loc[:, 'like'] = None
+    k_results = rec_books.loc[:, ['isbn', 'book_title', 'img_l', 'like']]
+    print(k_results)
+
+    '''
+    iid = str(sorted(books, key=lambda i: i.score, reverse=True)[0].isbn)
+    score = int(sorted(books, key=lambda i: i.score, reverse=True)[0].score)
+    res = get_initial_items(iid, score)
+    res = [int(i) for i in res]
+    if len(res) > 12:
+        res = res[:12]
+    print(res)
+    rec_movies = data.loc[data['isbn'].isin(res)]
+    print(rec_movies)
+    rec_movies.loc[:, 'like'] = None
+    results = rec_movies.loc[:, ['isbn', 'book_title', 'img_l', 'like']]
+    '''
+
+    return json.loads(k_results.to_json(orient="records"))
+
+# todo: like items
+# todo: get_similar_items by nlp
