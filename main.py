@@ -62,7 +62,7 @@ def get_genre():
 '''
 
 
-@app.post("/api/movies")
+@app.post("/api/books")
 def get_movies(genre: list):
     # todo: select algorithm
     '''
@@ -160,7 +160,9 @@ def get_similar_items(iid, n=12):
 @app.post("/api/recommend_nlp")
 def get_recommend_by_nlp(books: list):
     explicit_user_df = pd.DataFrame(books)
-    explicit_user_df.loc[:, 'user_id'] = 123123123    # todo: add user
+    new_user_id = add_new_nlp_user(explicit_user_df)     # add new user
+    print(new_user_id)
+    explicit_user_df.loc[:, 'user_id'] = new_user_id
     explicit_user_df.loc[:, 'rating'] = explicit_user_df.loc[:, 'score']
     k_results = get_predicted_result(explicit_user_df, item_df)
 
@@ -188,3 +190,21 @@ def get_recommend_by_nlp(books: list):
 
 # todo: like items
 # todo: get_similar_items by nlp
+
+
+def add_new_nlp_user(explicit_user_df):
+    nlp_user_file = "./new_nlp_data.csv"
+    if os.path.exists(nlp_user_file):
+        nlp_new_user_df = pd.read_csv(nlp_user_file)
+        user_list = nlp_new_user_df['user_id'].unique()
+        user_list = np.sort(user_list)
+        new_user_id = user_list[-1] + 1
+        explicit_user_df.loc[:, 'user_id'] = new_user_id
+        nlp_new_user_df = pd.concat([nlp_new_user_df, explicit_user_df])
+        nlp_new_user_df.reset_index(drop=True)
+    else:
+        nlp_new_user_df = explicit_user_df.copy()
+        new_user_id = 1
+        nlp_new_user_df.loc[:, 'user_id'] = new_user_id
+    nlp_new_user_df.to_csv(nlp_user_file, index=False)
+    return new_user_id

@@ -1,6 +1,7 @@
 import pandas as pd
+import numpy as np
+import scipy.sparse
 from sklearn.metrics.pairwise import cosine_similarity
-from nlp_summary.training_and_dumping import get_item_tfidf_vector
 
 
 def build_user_profile(user_preference_df, book_tfidf_vector, feature_list, normalized=False):
@@ -42,15 +43,16 @@ def get_recommendation_list(rec_result, user_preference_df, k):
 
 
 def get_predicted_result(user_preference_df, item_df):
-    # todo: load book_tfidf_vector, feature_list, tfidf_matrix
     # todo: prepare user preference df
 
     # testing
-    print("testing...")
-    book_tfidf_vector, tfidf_matrix, feature_list = get_item_tfidf_vector(item_df)
-    print("end of testing...")
+    print("loading tfidf item...")
+    book_tfidf_vector = pd.read_csv("nlp_summary/tfidf_vector.csv")
+    tfidf_matrix = scipy.sparse.load_npz('nlp_summary/tfidf_matrix.npz')
+    feature_list = np.load('nlp_summary/feature_list.npy', allow_pickle=True)
+    print("end of loading tfidf item...")
 
     user_profile = build_user_profile(user_preference_df, book_tfidf_vector, feature_list)
     rec_result = generate_recommendation_results(user_profile, tfidf_matrix, item_df)
-    k_results = get_recommendation_list(rec_result, user_preference_df, 10)
+    k_results = get_recommendation_list(rec_result, user_preference_df, 20)
     return k_results
