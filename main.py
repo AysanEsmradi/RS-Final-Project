@@ -4,6 +4,7 @@ from surprise import dump
 from pydantic import BaseModel
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import FileResponse
 import pandas as pd
 import numpy as np
 import os
@@ -31,6 +32,7 @@ app.add_middleware(
 # =======================DATA=========================
 data, item_df = prepare_data()
 print(data.columns)
+nlp_user_file = "./new_nlp_data.csv"
 
 """
 =================== Body =============================
@@ -38,10 +40,10 @@ print(data.columns)
 
 
 class Book(BaseModel):
-    isbn: int
     book_title: str
+    feedback: int
     img_l: str
-    score: int
+    isbn: str
 
 
 # == == == == == == == == == API == == == == == == == == == == =
@@ -98,6 +100,7 @@ def get_recommend(books: list):
 
 @app.get("/api/add_recommend/{item_id}")
 async def add_recommend(item_id):
+    print(item_id)
     res = get_similar_items(str(item_id), n=5)
     res = [int(i) for i in res]
     print(res)
@@ -158,7 +161,7 @@ def get_similar_items(iid, n=12):
 # == == == == == == == == == API for Jeffy == == == == == == == == == == =
 
 @app.post("/api/recommend_nlp")
-def get_recommend_by_nlp(books: list):
+def get_recommend_nlp(books: list):
     explicit_user_df = pd.DataFrame(books)
     new_user_id = add_new_nlp_user(explicit_user_df)     # add new user
     print(new_user_id)
@@ -168,8 +171,8 @@ def get_recommend_by_nlp(books: list):
 
     print("========================== return nlp result ============================")
     rec_books = item_df.loc[item_df['isbn'].isin(k_results)]
-    rec_books.loc[:, 'like'] = None
-    k_results = rec_books.loc[:, ['isbn', 'book_title', 'img_l', 'like']]
+    rec_books.loc[:, 'score'] = None
+    k_results = rec_books.loc[:, ['isbn', 'book_title', 'img_l', 'score']]
     print(k_results)
 
     '''
@@ -192,8 +195,30 @@ def get_recommend_by_nlp(books: list):
 # todo: get_similar_items by nlp
 
 
+@app.post("/api/add_recommend_nlp")
+async def add_recommend_nlp(feedback: list):
+    feedback_df = pd.DataFrame(feedback)
+    print(feedback_df)
+    nlp_new_user_df = load_new_nlp_user(feedback_df)
+    print(nlp_new_user_df)
+
+    # res = get_similar_items(str(item_id), n=5)
+    # res = [int(i) for i in res]
+    # print(res)
+    # rec_movies = data.loc[data['movie_id'].isin(res)]
+    # print(rec_movies)
+    # rec_movies.loc[:, 'like'] = None
+    # results = rec_movies.loc[:, ['movie_id', 'movie_title', 'release_date', 'poster_url', 'like']]
+
+    return json.loads(results.to_json(orient="records"))
+
+
+@app.get("/stage_two", response_class=FileResponse)
+def commence_stage_two():
+    return FileResponse('stage_2.html')
+
+
 def add_new_nlp_user(explicit_user_df):
-    nlp_user_file = "./new_nlp_data.csv"
     if os.path.exists(nlp_user_file):
         nlp_new_user_df = pd.read_csv(nlp_user_file)
         user_list = nlp_new_user_df['user_id'].unique()
@@ -208,3 +233,16 @@ def add_new_nlp_user(explicit_user_df):
         nlp_new_user_df.loc[:, 'user_id'] = new_user_id
     nlp_new_user_df.to_csv(nlp_user_file, index=False)
     return new_user_id
+
+
+def load_new_nlp_user(feedback_df):
+    nlp_new_user_df = pd.read_csv(nlp_user_file)
+    user_list = nlp_new_user_df['user_id'].unique()
+    user_list = np.sort(user_list)
+    new_user_id = user_list[-1]
+    feedback_df.loc[:, 'user_id'] = new_user_id
+    nlp_new_user_df = pd.concat([nlp_new_user_df, feedback_df])
+    nlp_new_user_df = nlp_new_user_df.loc[nlp_new_user_df['user_id'].isin([new_user_id])]
+    nlp_new_user_df.reset_index(drop=True)
+
+    return nlp_new_user_df

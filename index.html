@@ -30,9 +30,14 @@
                                 fit="cover"></el-image>
                         <h4 style="padding:0 10px;margin:0">{{o.book_title}}</h4>
                         <h6 style="padding:0 10px;margin:0.5em">{{ o.release_date }}</h6>
-                        <el-button type="danger" plain style="position:absolute;bottom:10px;right:10px" @click="liked_btn(o)">
-                            <i class="el-icon-medal el-icon--left"></i>Like
-                        </el-button>
+                        <el-rate v-model="o.score" style="padding:10px 10px;"></el-rate>
+                        <el-button 
+                            type="danger" 
+                            @click="liked_btn(o)" 
+                            style="min-width:128px"
+                        >
+                            Submit feedback
+                        </el-button>                    
                     </el-card>
                 </el-col>
             </el-row>
@@ -130,7 +135,6 @@
                 axios.post(this.baseurl + "/api/books", this.selected_genre).then((res) => {
                     //console.log(res);
                     this.books = res.data;
-                    console.log(typeof this.books);
                     if (this.books.length === 18) {
                         this.dialog0 = false;
                         this.dialog1 = true;
@@ -144,7 +148,6 @@
             },
             step2: function () {
                 //this.dialog1 = false;
-                // console.log(JSON.stringify(this.books));
                 axios.post(this.baseurl + "/api/recommend_nlp", this.books).then((res) => {
                     // console.log(res.data)
                     this.recommended = res.data;
@@ -158,11 +161,12 @@
                     }
                 });
             },
-            liked_btn:function(book){
+            liked_btn: function(book) {
                 let that = this;
                 this.liked.push(book);
                 this.recommended.splice(this.recommended.findIndex(item => item.isbn === book.isbn), 1);
-                axios.get(this.baseurl+'/api/add_recommend/'+book.isbn).then((res) =>{
+                console.log(book)
+                axios.post(this.baseurl+'/api/add_recommend_nlp/', [book]).then((res) => {
                     console.log(res.data);
                     that.recommended.push.apply(that.recommended,res.data);
                     that.liked.push.apply(that.liked,res.data);
@@ -189,7 +193,6 @@
                         scores++
                     }
                 }
-                console.log(scores);
                 if (scores >= 1) {
                     return false;
                 } else {

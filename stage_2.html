@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Book Recommender System</title>
+  <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+  <style>
+    body {
+      margin: 0;
+    }
+
+    .is-active {
+      color: blue
+    }
+  </style>
+</head>
+
+<body>
+  <!-- import Vue before Element -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.5.2/vue.js"></script>
+  <div id="app">
+    <div class="tabs">
+      <ul>
+        <li :class="{'is-active': activeTab === 1}" @click="activeTab = 1"><a> first tab </a></li>
+        <li :class="{'is-active': activeTab === 2}" @click="activeTab = 2"><a> second tab </a></li>
+        <li :class="{'is-active': activeTab === 3}" @click="activeTab = 3"><a> third tab</a></li>
+      </ul>
+    </div>
+  </div>
+  <script>
+    console.clear()
+
+    new Vue({
+      el: "#app",
+      data: {
+        activeTab: 1
+      }
+    })
+  </script>
+
+</body>
+
+</html>
