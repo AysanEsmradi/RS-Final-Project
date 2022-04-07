@@ -22,7 +22,9 @@ def get_item_tfidf_vector(item_df, max_feat=200):
 
 
 def main():
-    _, item_df = prepare_data()
+    _, item_df = prepare_data('../Preprocessed_data.csv')
+
+    # for hyper-parameter tuning, please refer to the jupyter notebook
     book_tfidf_vector, tfidf_matrix, feature_list = get_item_tfidf_vector(item_df, 200)
     book_tfidf_vector.to_csv("tfidf_vector.csv")
     scipy.sparse.save_npz('tfidf_matrix.npz', tfidf_matrix)

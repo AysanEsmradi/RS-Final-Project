@@ -42,7 +42,7 @@ def get_recommendation_list(rec_result, user_preference_df, k):
     return top_k_recommendation
 
 
-def get_predicted_result(user_preference_df, item_df):
+def get_predicted_nlp_result(user_preference_df, item_df, k):
     # todo: prepare user preference df
 
     # testing
@@ -54,5 +54,5 @@ def get_predicted_result(user_preference_df, item_df):
 
     user_profile = build_user_profile(user_preference_df, book_tfidf_vector, feature_list)
     rec_result = generate_recommendation_results(user_profile, tfidf_matrix, item_df)
-    k_results = get_recommendation_list(rec_result, user_preference_df, 20)
+    k_results = get_recommendation_list(rec_result, user_preference_df, k)
     return k_results

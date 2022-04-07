@@ -165,11 +165,10 @@
                 let that = this;
                 this.liked.push(book);
                 this.recommended.splice(this.recommended.findIndex(item => item.isbn === book.isbn), 1);
-                console.log(book)
                 axios.post(this.baseurl+'/api/add_recommend_nlp/', [book]).then((res) => {
                     console.log(res.data);
-                    that.recommended.push.apply(that.recommended,res.data);
-                    that.liked.push.apply(that.liked,res.data);
+                    //that.recommended.push.apply(that.recommended,res.data);
+                    this.liked = res.data;
                 })
             }
         },
