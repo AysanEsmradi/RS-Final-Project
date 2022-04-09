@@ -2,24 +2,10 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="61290560-a1d1-46aa-a2d1-f18f92f19193" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/create_file.py" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/index.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/model" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/movie_info.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/movie_poster.csv" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/new_nlp_data.csv" beforeDir="false" afterPath="$PROJECT_DIR$/new_nlp_data.csv" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/new_u.data" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/nlp_summary/algorithm.py" beforeDir="false" afterPath="$PROJECT_DIR$/nlp_summary/algorithm.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/nlp_summary/feature_list.npy" beforeDir="false" afterPath="$PROJECT_DIR$/nlp_summary/feature_list.npy" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/nlp_summary/tfidf_matrix.npz" beforeDir="false" afterPath="$PROJECT_DIR$/nlp_summary/tfidf_matrix.npz" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/nlp_summary/training_and_dumping.py" beforeDir="false" afterPath="$PROJECT_DIR$/nlp_summary/training_and_dumping.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/preparing_data.py" beforeDir="false" afterPath="$PROJECT_DIR$/preparing_data.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/recommender.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/u.data" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/u.item" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -231,7 +217,14 @@
       <option name="project" value="LOCAL" />
       <updated>1649345583945</updated>
     </task>
-    <option name="localTasksCounter" value="11" />
+    <task id="LOCAL-00011" summary="finished overall backend">
+      <created>1649345805306</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1649345805306</updated>
+    </task>
+    <option name="localTasksCounter" value="12" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">

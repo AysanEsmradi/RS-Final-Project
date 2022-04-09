@@ -30,7 +30,7 @@
                                 fit="cover"></el-image>
                         <h4 style="padding:0 10px;margin:0">{{o.book_title}}</h4>
                         <h6 style="padding:0 10px;margin:0.5em">{{ o.release_date }}</h6>
-                        <el-rate v-model="o.score" style="padding:10px 10px;"></el-rate>
+                        <el-rate v-model="o.score" style="padding:10px 10px;" :max=10></el-rate>
                         <el-button 
                             type="danger" 
                             @click="liked_btn(o)" 
@@ -90,7 +90,7 @@
                                     :src="o.img_l"
                                     fit="cover"></el-image>
                             <h4 style="padding:0 10px;margin:0">{{o.book_title}}</h4>
-                            <el-rate v-model="o.score" style="padding:10px 10px;"></el-rate>
+                            <el-rate v-model="o.score" style="padding:10px 10px;" :max=10></el-rate>
                         </el-card>
                     </el-col>
                 </el-row>

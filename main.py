@@ -22,7 +22,6 @@ app.add_middleware(
 
 # =======================DATA=========================
 data, item_df = prepare_data()
-print(data.columns)
 nlp_user_file = "./new_nlp_data.csv"
 svd_user_file = "./new_svd_data.csv"
 
@@ -123,10 +122,10 @@ def load_new_nlp_user(feedback_df):
     user_list = np.sort(user_list)
     new_user_id = user_list[-1]
     feedback_df.loc[:, 'user_id'] = new_user_id
-    nlp_new_user_df.reset_index(drop=True, inplace=True)
-    nlp_new_user_df.to_csv(svd_user_file, index=False)
-
     nlp_new_user_df = pd.concat([nlp_new_user_df, feedback_df])
+    nlp_new_user_df.reset_index(drop=True, inplace=True)
+    nlp_new_user_df.to_csv(nlp_user_file, index=False)
+
     nlp_new_user_df = nlp_new_user_df.loc[nlp_new_user_df['user_id'].isin([new_user_id])]
     nlp_new_user_df.reset_index(drop=True, inplace=True)
     return nlp_new_user_df
