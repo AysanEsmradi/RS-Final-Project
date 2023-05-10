@@ -1,1 +1,2 @@
-# RS-Final-Project
+# Recommender System-Project
+The objective of this project is to design a book recommendation website that allows the user to select a preferred genre of books. Upon selection, the website should recommend a few books that are based on the selected genre. The website should also allow the user to rate the recommended books, and based on the ratings provided, recommend new items to the user. The system should offer two different recommender algorithms for the user to choose from. This project involves implementing an effective recommendation engine that can provide personalized recommendations to the users based on their preferences and ratings. The system should be user-friendly and should provide a seamless experience to the users.
